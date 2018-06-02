@@ -17,7 +17,8 @@ const userSchema = new Schema({
 	dialog: {type: Array, default: []}, //对话列表
 	group: {type:Array, default: []},  //群聊列表
 	friends: {type:Array, default: []}, //好友列表
-	wall: String //朋友圈背景墙
+	wall: String, //朋友圈背景墙
+	online: Boolean
 })
 
 userSchema.index({id: 1})	//给字段设置索引

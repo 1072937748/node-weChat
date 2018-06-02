@@ -54,7 +54,6 @@ app.use(session({
 
 const users = {};
 io.on('connection', socket => {
-
 	// 设置身份
 	socket.on("setInfo", async (msg) => {
 		console.log('设置身份', msg);
@@ -74,6 +73,10 @@ io.on('connection', socket => {
 		userData.group.forEach(element => {
 			socket.join(element)
 		});
+		userData.online = true;
+		await userData.save((err, data) => {
+			console.log(data)
+		})
 	})
 
 	// 创建房间
@@ -284,8 +287,13 @@ io.on('connection', socket => {
 			}
 		}
 	})
-	socket.on("disconnect", (msg) => {
+	socket.on("disconnect", async (msg) => {
 		console.log(socket.clientID, '离线')
+		let userData = await UserModel.findOne({
+			id: socket.clientID
+		})
+		userData.online = false;
+		await userData.save()
 	})
 });
 

@@ -33,7 +33,8 @@ router.get('/register', async (req, res, next) => {
 				id: ID.user_id,
 				password: password,
 				phone: username,
-				remarks: username
+				remarks: username,
+				online: true
 			});
 			const userData = await UserModel.findOne({
 				name: username
@@ -59,10 +60,15 @@ router.get('/login', async (req, res, next) => {
 	const username = req.query.username.toString();
 	const password = req.query.password.toString();
 	try {
-		const userData = await UserModel.findOne({
+		let userData = await UserModel.findOne({
 			name: username,
 			password
 		}, '-_id -password -__v');
+		console.log('before',userData)
+		userData.online = true;
+		console.log('online',userData.setter)
+		await userData.save();
+		console.log('await')
 		if (userData) {
 			req.session.user_id = userData.id;
 			res.send({
@@ -76,15 +82,22 @@ router.get('/login', async (req, res, next) => {
 			})
 		}
 	} catch (err) {
+		console.log(err)
 		res.send({
 			status: 0,
-			message: err,
+			message: err.message,
 		})
 	}
 })
 
 // 退出
 router.post('/logOut', async (req, res, next) => {
+	const id = req.session.user_id;
+	let userData = await UserModel.findOne({
+		id
+	})
+	userData.online = false;
+	await userData.save()
 	try {
 		delete req.session.user_id;
 		res.send({
@@ -94,7 +107,7 @@ router.post('/logOut', async (req, res, next) => {
 	} catch (err) {
 		res.send({
 			status: 0,
-			message: '退出失败',
+			message: err.message,
 		})
 	}
 })
