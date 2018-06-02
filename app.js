@@ -174,6 +174,7 @@ io.on('connection', socket => {
 			content
 		} = data;
 		content = content.trim();
+		console.log(data)
 		try {
 			if (!from_id) {
 				socket.error('发送者ID为空')

@@ -289,10 +289,17 @@ router.get('/search', async (req, res, next) => {
 		const user = await UserModel.findOne({
 			phone
 		})
-		res.send({
-			status: 200,
-			data: user,
-		})
+		if (user) {
+			res.send({
+				status: 200,
+				data: user,
+			})
+		} else {
+			res.send({
+				status: 0,
+				message: '未找到该好友',
+			})
+		}
 	} catch (err) {
 		res.send({
 			type: 'ERROR_TO_GET_USER_LIST',
@@ -307,8 +314,11 @@ router.get('/addfriend', async (req, res, next) => {
 		id,
 		friend
 	} = req.query;
-	if (id == req.session.user_id) {
-		return
+	if (friend == req.session.user_id) {
+		res.send({
+			status: 0,
+			message: '不可以添加自身'
+		})
 	}
 	try {
 		const userData = await UserModel.findOne({

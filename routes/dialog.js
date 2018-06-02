@@ -19,7 +19,7 @@ router.get('/dialog', (req, res, next) => {
         const element = UserData.dialog[index];
         let eleInfo = await UserModel.findOne({
           id: element
-        }, '-_id name remarks avatar')
+        }, '-_id')
         const msgData = await ChatModel.find({
           $or: [{
             "from_id": element,
@@ -36,6 +36,11 @@ router.get('/dialog', (req, res, next) => {
           name: eleInfo.name,
           remarks: eleInfo.remarks,
           avatar: eleInfo.avatar,
+          phone: eleInfo.phone,
+          online: eleInfo.online,
+          pinyin: eleInfo.pinyin,
+          sdasd: eleInfo.sdasd,
+          sex: eleInfo.sex,
           content: msgData.length ? msgData[0].content : '',
           dialogtime: msgData.length ? msgData[0].dialogtime : ''
         })

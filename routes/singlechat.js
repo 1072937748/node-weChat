@@ -21,7 +21,6 @@ router.post('/history', async (req, res, next) => {
 		}, '-_id').sort({
 			id: -1
 		}).skip(Number(offset)).limit(Number(limit));
-		console.log(history[0])
 		res.send({
 			status: 200,
 			history: history.reverse(),
