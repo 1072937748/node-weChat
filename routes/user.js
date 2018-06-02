@@ -34,7 +34,7 @@ router.get('/register', async (req, res, next) => {
 				password: password,
 				phone: username,
 				remarks: username,
-				online: true
+				online: 1
 			});
 			const userData = await UserModel.findOne({
 				name: username
@@ -60,15 +60,13 @@ router.get('/login', async (req, res, next) => {
 	const username = req.query.username.toString();
 	const password = req.query.password.toString();
 	try {
-		let userData = await UserModel.findOne({
+		const userData = await UserModel.findOne({
 			name: username,
 			password
-		}, '-_id -password -__v');
-		console.log('before',userData)
-		userData.online = true;
-		console.log('online',userData.setter)
+		}, '-password');
+		userData.online = 1;
+		console.log(userData)
 		await userData.save();
-		console.log('await')
 		if (userData) {
 			req.session.user_id = userData.id;
 			res.send({
@@ -82,7 +80,7 @@ router.get('/login', async (req, res, next) => {
 			})
 		}
 	} catch (err) {
-		console.log(err)
+		console.log(err.message)
 		res.send({
 			status: 0,
 			message: err.message,
@@ -96,7 +94,7 @@ router.post('/logOut', async (req, res, next) => {
 	let userData = await UserModel.findOne({
 		id
 	})
-	userData.online = false;
+	userData.online = 0;
 	await userData.save()
 	try {
 		delete req.session.user_id;

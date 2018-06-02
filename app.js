@@ -73,7 +73,7 @@ io.on('connection', socket => {
 		userData.group.forEach(element => {
 			socket.join(element)
 		});
-		userData.online = true;
+		userData.online = 1;
 		await userData.save((err, data) => {
 			console.log(data)
 		})
@@ -292,7 +292,7 @@ io.on('connection', socket => {
 		let userData = await UserModel.findOne({
 			id: socket.clientID
 		})
-		userData.online = false;
+		userData.online = 0;
 		await userData.save()
 	})
 });
